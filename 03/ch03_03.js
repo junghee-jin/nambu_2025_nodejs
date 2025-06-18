@@ -34,8 +34,24 @@ const startDate2 = moment("2024-03-15");
 const MonthDays = moment("2025-09-20");
 const diffDay2 = MonthDays.diff(startDate2, "months");
 console.log(diffDay2);
+
 // 크리스마스까지 남은 일수를 계산해 보세요.
 const s2 = moment();
 const christMasDate = moment("2025-12-25");
 const mb2 = christMasDate.diff(s2, "days");
 console.log("크리스마스까지 남은 날 수", mb2);
+
+require("moment/locale/ko"); // 한국어 로케일 불러오기
+moment.locale("ko"); // 한국어 로케일 설정
+const s3 = moment();
+console.log(`요일: ${s3.format("d")}`); // 3 // 3
+console.log(`요일: ${s3.format("dd")}`); // we // 수
+console.log(`요일: ${s3.format("ddd")}`); // wed // 수
+console.log(`요일: ${s3.format("dddd")}`); // Wednesday // 수요일
+
+// 올해 크리스마스는 무슨 요일일까요?
+const s4 = moment("2025-12-25");
+console.log(`크리스마스 요일: ${s4.format("dddd")}`);
+
+const s5 = moment("1988-12-23");
+console.log(`내 생일 요일: ${s5.format("dddd")}`);
