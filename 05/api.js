@@ -25,6 +25,7 @@ const create_sql = `
 `;
 db.exec(create_sql);
 
+// 게시글 하나 입력
 app.post("/posts", (req, res) => {
   const { title, content, author } = req.body;
   let sql = `
@@ -35,6 +36,7 @@ app.post("/posts", (req, res) => {
   res.status(201).json({ message: "ok" });
 });
 
+// 전체 테이블 내용 검색
 app.get("/posts", (req, res) => {
   let sql = `
         select id, title, content, author, createAt
@@ -44,6 +46,32 @@ app.get("/posts", (req, res) => {
   const rows = stmt.all(); // 쿼리를 날려주세요
   console.log(rows);
   res.status(200).json({ data: rows });
+});
+
+// id를 통해 하나의 게시글을 검색
+app.get("/posts/:id", (req, res) => {
+  const id = req.params.id;
+  let sql = `
+        select id, title, content, author, createAt, count
+        from posts where id = ?
+    `;
+  const stmt = db.prepare(sql); // select 쿼리문이 준비 완료
+  const post = stmt.get(id); // 실제 쿼리문이 실행
+  res.status(200).json({ data: post }); //
+});
+
+// 게시글 수정
+// http://localhost:3000/posts?key=
+app.put("/posts/:id", (req, res) => {
+  const id = req.params.id;
+  const { title, content } = req.body;
+  let sql = `
+    update posts set title =?, content =? where id =?
+  `;
+  const stmt = db.prepare(sql);
+  stmt.run(title, content, id); // 실제 쿼리문 데이터베이스 실행
+  res.redirect("/posts");
+  // res.status(201).json({ message: "ok" }); 원래는 이것 사용
 });
 
 // server start
