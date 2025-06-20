@@ -65,6 +65,8 @@ app.get("/posts/:id", (req, res) => {
         select id, title, content, author, createAt, count
         from posts where id = ?
     `;
+  let ac_sql = `update posts set count = count + 1 where id =?`; // 조회수 증가 쿼리문
+  db.prepare(ac_sql).run(id);
   const stmt = db.prepare(sql); // select 쿼리문이 준비 완료
   const post = stmt.get(id); // {} 게시글 객체로 반환
   res.status(200).json({ data: post }); // 제이슨 문자열로 리턴
