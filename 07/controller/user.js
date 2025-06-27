@@ -49,10 +49,15 @@ const deleteUser = async (req, res) => {
 };
 
 const findUserByEmail = async (req, res) => {
+  const email = req.params.email;
   const user = await models.User.findOne({
     where: { email: email },
   });
-  return user;
+  if (user) {
+    res.status(200).json({ message: "ok", data: user });
+  } else {
+    res.status(404).json({ message: "user not found" });
+  }
 };
 
 module.exports = {
