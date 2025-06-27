@@ -3,12 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     "User",
     {
       name: DataTypes.STRING,
-      email: {
-        type: DataTypes.STRING,
-        validator: {
-          isEmail: true,
-        },
-      },
+      email: DataTypes.STRING,
       password: DataTypes.STRING,
       role: {
         type: DataTypes.ENUM("admin", "user"),
@@ -19,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "users",
     }
   );
-
   User.associate = function (models) {
     User.hasMany(models.Post, {
       foreignKey: "authorId",

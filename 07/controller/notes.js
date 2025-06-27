@@ -1,15 +1,9 @@
-//여기에 note 앱 restful api 를 만들어주세요
-const express = require("express");
-const models = require("./models");
-// requre("./models/index.js")
-// models 에는 index.js 맨 하단에 있는 db 변수가 할당이됩니다.
-// models.Todo models.Post
-const app = express();
-const PORT = 3000;
-app.use(express.json());
+const models = require("../models");
+// 모델에서 데이터를 조회거나 수정,추가,삭제 전문하는
+// 함수만 모아 놓습니다.
+// 핸들러 함수
 
-// POST /notes : 노트 입력
-app.post("/notes", async (req, res) => {
+exports.createNote = async (req, res) => {
   const { title, content, tag } = req.body;
   const note = await models.Note.create({
     title: title,
@@ -17,14 +11,14 @@ app.post("/notes", async (req, res) => {
     tag: tag,
   });
   res.status(201).json({ message: "ok", data: note });
-});
-// GET  /notes : 노트 목록조회
-app.get("/notes", async (req, res) => {
+};
+
+exports.getAllNotes = async (req, res) => {
   const notes = await models.Note.findAll();
   res.status(201).json({ message: "ok", data: notes });
-});
-// GET  /notes/:tag : 태그로 노트 목록 조회
-app.get("/notes/:tag", async (req, res) => {
+};
+
+exports.getNotes = async (req, res) => {
   const tag = req.params.tag;
   const notes = await models.Note.findAll({
     where: {
@@ -32,9 +26,9 @@ app.get("/notes/:tag", async (req, res) => {
     },
   });
   res.status(200).json({ message: "ok", data: notes });
-});
-// PUT  /notes/:id : id 로 노트 수정
-app.put("/notes/:id", async (req, res) => {
+};
+
+exports.updateNote = async (req, res) => {
   const id = req.params.id;
   const { title, content, tag } = req.body;
   const note = await models.Note.findByPk(id);
@@ -47,9 +41,9 @@ app.put("/notes/:id", async (req, res) => {
   } else {
     res.status(404).json({ message: "not found note" });
   }
-});
-// DELETE /notes/:id :id 로 노트 삭제
-app.delete("/notes/:id", async (req, res) => {
+};
+
+exports.deleteNote = async (req, res) => {
   const id = req.params.id;
   const result = await models.Note.destroy({ where: { id: id } });
   if (result > 0) {
@@ -57,17 +51,4 @@ app.delete("/notes/:id", async (req, res) => {
   } else {
     res.status(404).json({ message: "note not found" });
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`server is listening on ${PORT}`);
-  models.sequelize
-    .sync({ force: false })
-    .then(() => {
-      console.log("DB connected");
-    })
-    .catch(() => {
-      console.error("DB error");
-      process.exit();
-    });
-});
+};
